@@ -1,0 +1,20 @@
+# MounRiver Studio / Eclipse build artifacts
+*.elf
+*.map
+*.hex
+*.bin
+*.lst
+
+# Build output directories
+obj/
+Debug/
+Release/
+
+# Other temporary files
+*.bak
+*~
+.DS_Store
+
+# Exclude third-party libraries and SDKs
+CH32V307VCT6/
+DHT11/ 
