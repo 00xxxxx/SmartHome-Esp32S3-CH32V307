@@ -15,8 +15,8 @@
  *              负责其初始化和数据读取。
  *            - Protocol层 (udp_client.c/.h): 封装网络通信协议，实现UDP数据的
  *              打包和发送。
- *            - Handler层 (uart_handler.c/.h): 负责解析和处理来自特定外设（如
- *              串口）的指令。
+ *            - Handler层 (uart_handler.c/.h, zigbee_handler.c/.h): 负责解析和处理
+ *              来自特定接口（如串口1、Zigbee模块）的指令和数据。
  *            - App层 (main.c): 作为顶层应用，负责初始化所有模块，并在主循环中
  *              调度各个任务，实现核心业务逻辑。
  *
@@ -25,14 +25,15 @@
  *            2. 网络初始化: 调用 UDP_Client_Init() 初始化以太网和UDP协议栈。
  *            3. 主循环 (while(1)):
  *               - WCHNET_MainTask(): WCH-NET协议栈的核心轮询任务。
- *               - UDP_Client_Handle_GlobalInt(): 处理网络事件。
  *               - UDP数据上报: 定期读取DHT11温湿度，并通过UDP发送。
- *               - 本地传感器任务: 定期巡检光敏、红外、烟雾传感器，并根据预设
- *                 阈值自动控制LED和蜂鸣器。
+ *               - 本地光感任务: 定期巡检光敏传感器，并根据阈值自动控制LED1。
+ *               - Zigbee报警任务: 监听并处理来自远程Zigbee节点的报警信息，
+ *                 实现持续鸣叫报警及按键消警功能。
  *
  * @par       中断服务 (Interrupt Services in ch32v30x_it.c):
- *            - EXTI0_IRQHandler: 按键(KEY)中断，用于手动翻转LED1。
- *            - USART1_IRQHandler: 串口接收中断，用于处理远程控制指令。
+ *            - EXTI0_IRQHandler: 按键(KEY)中断，用于手动翻转LED1及清除Zigbee报警。
+ *            - USART1_IRQHandler: 串口1接收中断，用于处理来自ESP32的远程控制指令。
+ *            - USART2_IRQHandler: 串口2接收中断，用于接收来自Zigbee协调器的数据。
  *            - SysTick_Handler: 系统滴答定时器，为非阻塞延时提供时基。
  *            - TIM2_IRQHandler: 通用定时器2，为WCH-NET协议栈提供时基。
  *
@@ -158,7 +159,7 @@ int main(void)
         /* 本地传感器逻辑任务 */
         Sensor_Task();
 
-        /* Zigbee数据处理任务 */
+        /* Zigbee报警应用逻辑任务 */
         Zigbee_Handler_Task();
     }
 }

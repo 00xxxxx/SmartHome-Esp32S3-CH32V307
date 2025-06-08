@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<iarUserArgVars>
+    <group name="ZStack" active="true">
+        <variable>
+            <name>ZSTACK_HOME</name>
+            <value>D:\Z-Stack Home 1.2.2a.44539</value>
+        </variable>
+    </group>
+</iarUserArgVars>

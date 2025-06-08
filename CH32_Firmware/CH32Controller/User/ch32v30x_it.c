@@ -77,7 +77,9 @@ void SysTick_Handler(void)
  *
  * @brief   外部中断0服务程序.
  * @note    连接到 KEY 按键 (PA0)，下降沿触发.
- *          同时用于手动控制LED1的亮灭状态和清除报警.
+ *          主要功能:
+ *          1. 手动清除由Zigbee模块触发的报警状态.
+ *          2. 翻转LED1的亮灭状态作为按键反馈.
  *
  * @return  none
  */

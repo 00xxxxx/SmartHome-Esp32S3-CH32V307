@@ -65,12 +65,26 @@
 - 代码位置: 所有源码及MounRiver工程文件均位于 `CH32_Firmware/` 目录下。
 - 功能:
     1.  初始化所有连接的传感器和执行器。
-    2.  监听来自 `ESP32-S3` 的串口指令，并执行相应动作 (如 `LED2ON`, `ReeSuccess`)。
-    3.  运行一个本地任务循环 (`Sensor_Task`)，处理自动光控和报警逻辑。
-    4.  通过WCH-NET协议栈，以DHCP方式连接以太网，并定时发送UDP数据包,pc通过`udp_server.py`接收。
+    2.  通过串口2与一个 **预烧录了透传固件的CC2530协调器模块** 通信，接收来自无线节点的报警。
+    3.  监听来自 `ESP32-S3` 的串口指令，并执行相应动作 (如 `LED2ON`, `ReeSuccess`)。
+    4.  运行一个本地任务循环 (`Sensor_Task`)，处理自动光控和报警逻辑。
 - 如何编译和下载:
     1.  使用 MounRiver Studio 导入 `CH32_Firmware/CH32Controller/` 工程。
     2.  编译并使用 WCH-LinkE 下载。
+
+### 3. CC2530 终端固件
+
+这部分是为连接了红外和烟雾传感器的 **裸CC2530模块** 准备的固件。
+
+- 代码位置: 所有源码及IAR工程文件均位于 `CC2530_Firmware/` 目录下。
+- 功能:
+    1.  初始化红外传感器和烟雾传感器。
+    2.  作为一个Zigbee终端设备（End-Device）加入网络。
+    3.  当传感器被触发时，通过Zigbee无线网络向协调器（连接在CH32V307上）发送报警指令。
+- 如何编译和下载:
+    1.  确保已安装 IAR Embedded Workbench for 8051 (v10.10) 和 TI Z-Stack-Home-1.2.2a。
+    2.  使用 IAR 打开 `CC2530_Firmware/` 目录下的 `.eww` 工作区文件。
+    3.  编译工程，并使用 CC-Debugger 将生成的固件下载到 CC2530 模块。
 
 ### 2. ESP32-S3 主机固件
 
@@ -100,14 +114,12 @@
 
 ## CH32V307 硬件引脚分配
 
-```
 =========================================================
            CH32V307EVT Pinout Configuration
 =========================================================
 
 --- Network (Ethernet RMII Interface) ---
 - PA1: RMII_REF_CLK
-- PA2: RMII_MDIO
 - PA7: RMII_CRS_DV
 - PC1: RMII_MDC
 - PC4: RMII_RXD0
@@ -116,12 +128,16 @@
 - PG13: RMII_TXD0
 - PG14: RMII_TXD1
 
+--- Zigbee Communication ---
+- USART2_TX (to Zigbee RX): PA2
+- USART2_RX (from Zigbee TX): PA3
+
 --- User LEDs ---
 - LED1 (Auto Light & Manual Control): PB0
 - LED2 (UART Command Control): PB1
 
 --- User KEY ---
-- KEY1 (Manual LED1 Toggle): PA0 -> EXTI0
+- KEY1 (Manual LED1 Toggle & Alarm Clearing): PA0 -> EXTI0
 
 --- Actuators ---
 - Buzzer: PB2
@@ -129,12 +145,11 @@
 
 --- Sensors ---
 - DHT11 (Temperature & Humidity): PA5
-- Photoresistor (Light Sensor): PA6 -> ADC1_IN6
-- PIR (Human Body Infrared): PA3
-- Smoke Sensor: PA4
+- Photoresistor (Light Sensor): PA1 -> ADC1_IN1
 
 --- Debug & Control ---
 - USART1_TX: PA9
 - USART1_RX: PA10
 =========================================================
-``` 
+
+- **注意**: 由于红外和烟雾传感器已移至独立的Zigbee节点，故从CH32V307的引脚图中移除。
