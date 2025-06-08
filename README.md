@@ -1,4 +1,4 @@
-# 基于ESP32-S3与CH32V307的人脸识别智能家居系统
+# 基于ESP32-S3＋CH32V307的人脸识别智能家居系统
 
 ## 项目描述
 
@@ -67,7 +67,7 @@
     1.  初始化所有连接的传感器和执行器。
     2.  监听来自 `ESP32-S3` 的串口指令，并执行相应动作 (如 `LED2ON`, `ReeSuccess`)。
     3.  运行一个本地任务循环 (`Sensor_Task`)，处理自动光控和报警逻辑。
-    4.  通过WCH-NET协议栈，以DHCP方式连接以太网，并定时发送UDP数据包。
+    4.  通过WCH-NET协议栈，以DHCP方式连接以太网，并定时发送UDP数据包,pc通过`udp_server.py`接收。
 - 如何编译和下载:
     1.  使用 MounRiver Studio 导入 `CH32_Firmware/CH32Controller/` 工程。
     2.  编译并使用 WCH-LinkE 下载。
@@ -76,7 +76,7 @@
 
 这部分是项目的智能处理核心，负责运行AI算法和系统主逻辑。
 
-- 代码位置: 所有源码及ESP-IDF工程文件均位于 `ESP32_Firmware/` 目录下。 (请根据您的实际目录结构调整)
+- 代码位置: 所有源码及ESP-IDF工程文件均位于源目录下（删除`CH32_Firmware/` 目录）。
 - 开发环境: `ESP-IDF` (推荐 V5.0及以上)
 - 核心任务:
     - Camera Task: 使用 `esp_camera` 组件驱动 `OV2640` 进行图像采集。
@@ -85,7 +85,7 @@
     - Control Task: 根据识别结果，或接收到的其他指令，组装命令并通过串口发送给 `CH32V307`。
 - 如何编译和下载:
     1.  参考[官方文档](https://docs.espressif.com/projects/esp-idf/en/latest/esp32s3/get-started/index.html)安装 ESP-IDF 并配置好开发环境。
-    2.  在终端中进入 ESP32 的固件目录 (例如 `ESP32_Firmware/`)。
+    2.  在终端中进入 ESP32 的固件目录。
     3.  运行 `idf.py build` 进行编译。
     4.  运行 `idf.py -p (您的串口号) flash monitor` 来下载固件并查看日志。
 
