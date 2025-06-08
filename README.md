@@ -119,8 +119,6 @@
 
 ## CH32V307 硬件引脚分配
 
-           CH32V307EVT Pinout Configuration
-
 --- Network (Ethernet RMII Interface) ---
 - PA1: RMII_REF_CLK
 - PA7: RMII_CRS_DV
