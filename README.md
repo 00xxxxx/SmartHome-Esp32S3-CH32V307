@@ -52,7 +52,7 @@
 ### 技术栈清单
 | 类别 | 技术点 |
 | :--- | :--- |
-| **硬件平台** | `ESP32-S3`, `CH32V307 (RISC-V)`, `CC2530`, `OV2640`, `INMP441`, `DHT11` |
+| **硬件平台** | `ESP32-S3`, `CH32V307 (RISC-V)`, `CC2530`, `OV2640`, `INMP441`, `DHT11`,`各类传感器` |
 | **核心框架** | `ESP-IDF`, `ESP-WHO`, `ESP-SR`, `FreeRTOS`, `Zigbee (Z-Stack)` |
 | **通信接口** | `Ethernet` (UDP), `UART`, `I2C`, `SPI`, `单总线`, `Zigbee` |
 | **开发工具** | `MounRiver Studio`, `VS Code` with `ESP-IDF Plugin`, `IAR Embedded Workbench for 8051` |
@@ -71,7 +71,7 @@
 - **功能**:
     1.  初始化所有连接的传感器和执行器。
     2.  通过串口2与一个 **预烧录了透传固件的CC2530协调器模块** 通信，接收来自无线节点的报警。
-    3.  监听来自 `ESP32-S3` 的串口指令，并执行相应动作 (如 `LED2ON`, `ReeSuccess`)。
+    3.  监听来自 `ESP32-S3` 的串口指令，并执行相应动作 (如 `LED2ON`, `ReSuccess`)。
     4.  运行一个本地任务循环 (`Sensor_Task`)，处理自动光控和报警逻辑。
 - **如何编译和下载**:
     1.  使用 MounRiver Studio 导入 `CH32_Firmware/CH32Controller/` 工程。
@@ -87,8 +87,8 @@
     2.  作为一个Zigbee终端设备（End-Device）加入网络。
     3.  当传感器被触发时，通过Zigbee无线网络向协调器（连接在CH32V307上）发送报警指令。
 - **如何编译和下载**:
-    1.  确保已安装 IAR Embedded Workbench for 8051 (v10.10) 和 TI Z-Stack-Home-1.2.2a。
-    2.  使用 IAR 打开 `CC2530_Firmware/` 目录下的 `.eww` 工作区文件。
+    1.  确保已安装 IAR Embedded Workbench for 8051 和 TI Z-Stack-Home-1.2.2a。
+    2.  使用 IAR 打开 `CC2530_Firmware/` 目录下的 `.eww` 工作区文件。（注意环境的修改！）
     3.  编译工程，并使用 CC-Debugger 将生成的固件下载到 CC2530 模块。
 
 ### 3. ESP32-S3 主机固件
