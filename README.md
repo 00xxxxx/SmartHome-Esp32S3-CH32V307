@@ -67,7 +67,7 @@
     1.  初始化所有连接的传感器和执行器。
     2.  监听来自 `ESP32-S3` 的串口指令，并执行相应动作 (如 `LED2ON`, `ReeSuccess`)。
     3.  运行一个本地任务循环 (`Sensor_Task`)，处理自动光控和报警逻辑。
-    4.  通过WCH-NET协议栈，以DHCP方式连接以太网，并定时发送UDP数据包。
+    4.  通过WCH-NET协议栈，以DHCP方式连接以太网，并定时发送UDP数据包,pc通过`udp_server.py`接收。
 - 如何编译和下载:
     1.  使用 MounRiver Studio 导入 `CH32_Firmware/CH32Controller/` 工程。
     2.  编译并使用 WCH-LinkE 下载。
