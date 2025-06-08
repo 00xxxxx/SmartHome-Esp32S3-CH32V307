@@ -13,9 +13,12 @@
 #include "dht11.h"
 #include "udp_client.h"
 #include "bsp_led.h"
+#include "bsp_usart2.h"
+#include "zigbee_handler.h"
 
 // 为中断处理函数声明外部回调
 extern void USART1_IRQHandler_Callback(void);
+extern void USART2_IRQHandler_Callback(void);
 extern void SysTick_Handler_Callback(void);
 
 void NMI_Handler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
@@ -25,6 +28,7 @@ void SysTick_Handler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
 void EXTI0_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
 void TIM2_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
 void USART1_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
+void USART2_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
 
 /*********************************************************************
  * @fn      NMI_Handler
@@ -73,7 +77,7 @@ void SysTick_Handler(void)
  *
  * @brief   外部中断0服务程序.
  * @note    连接到 KEY 按键 (PA0)，下降沿触发.
- *          用于手动控制LED1的亮灭状态.
+ *          同时用于手动控制LED1的亮灭状态和清除报警.
  *
  * @return  none
  */
@@ -83,8 +87,14 @@ void EXTI0_IRQHandler(void)
     Delay_Ms(20);
     if(EXTI_GetITStatus(EXTI_Line0) != RESET)
     {
-        LED_Toggle(LED1); // 翻转LED1状态
-        EXTI_ClearITPendingBit(EXTI_Line0);     /* Clear Flag */
+        // 1. 调用接口清除报警
+        Zigbee_Clear_Alarm();
+
+        // 2. 翻转LED1状态 (提供按键反馈)
+        LED_Toggle(LED1);
+
+        // 3. 清除中断标志
+        EXTI_ClearITPendingBit(EXTI_Line0);
     }
 }
 
@@ -114,6 +124,20 @@ void TIM2_IRQHandler(void)
 void USART1_IRQHandler(void)
 {
     USART1_IRQHandler_Callback();
+}
+
+/*********************************************************************
+ * @fn      USART2_IRQHandler
+ *
+ * @brief   串口2中断服务程序.
+ * @note    当通过串口2接收到Zigbee数据时触发.
+ *          具体的数据处理在 `bsp_usart2.c` 的回调函数中完成.
+ *
+ * @return  none
+ */
+void USART2_IRQHandler(void)
+{
+    USART2_IRQHandler_Callback();
 }
 
 

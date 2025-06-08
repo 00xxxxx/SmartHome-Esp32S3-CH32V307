@@ -2,7 +2,7 @@
  * @file      main.c
  * @author    Gemini
  * @brief     智能家居外设控制器主程序.
- * @version   2.5 (Finalized with comments)
+ * @version   3.0 (Modular Zigbee)
  * @date      2025-06-08
  *
  * @copyright Copyright (c) 2025
@@ -49,6 +49,7 @@
 #include "bsp_servo.h"
 #include "bsp_sensors.h"
 #include "uart_handler.h"
+#include "zigbee_handler.h"
 
 /* 为WCHNET库中定义的全局变量提供外部声明 */
 extern u8 IPAddr[4];
@@ -80,6 +81,7 @@ static void System_Init(void)
     Key_Init();
     Sensors_Init();
     UART_Handler_Init();
+    Zigbee_Handler_Init();
     Servo_Init();
     DHT11_Init();
 
@@ -87,11 +89,8 @@ static void System_Init(void)
     Servo_SetAngle(0);
 }
 
-
 /**
- * @brief  传感器处理任务.
- *         - 根据光照控制LED1
- *         - 根据PIR和烟雾传感器控制蜂鸣器
+ * @brief  本地传感器处理任务.
  * @return none
  */
 static void Sensor_Task(void)
@@ -114,16 +113,6 @@ static void Sensor_Task(void)
     {
         LED_Off(LED1); // 天亮关灯
     }
-
-    // 2. 人体红外/烟雾 -> 蜂鸣器
-    if(PIR_Is_Triggered() || Smoke_Is_Triggered())
-    {
-        Buzzer_On();
-    }
-    else
-    {
-        Buzzer_Off();
-    }
 }
 
 /*********************************************************************
@@ -139,7 +128,7 @@ int main(void)
     char udp_buf[50];
 
     System_Init();
-    printf("Welcome to CH32Controller V2.0\r\n");
+    printf("Welcome to CH32Controller V3.0\r\n");
 
     /* 初始化网络并等待IP分配 */
     if (UDP_Client_Init(App_Socket_Callback) != 0)
@@ -168,6 +157,9 @@ int main(void)
 
         /* 本地传感器逻辑任务 */
         Sensor_Task();
+
+        /* Zigbee数据处理任务 */
+        Zigbee_Handler_Task();
     }
 }
 
