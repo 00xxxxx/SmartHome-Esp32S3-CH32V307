@@ -119,38 +119,55 @@
 
 ## CH32V307 硬件引脚分配
 
---- Network (Ethernet RMII Interface) ---
-- PA1: RMII_REF_CLK
-- PA7: RMII_CRS_DV
-- PC1: RMII_MDC
-- PC4: RMII_RXD0
-- PC5: RMII_RXD1
-- PG11: RMII_TX_EN
-- PG13: RMII_TXD0
-- PG14: RMII_TXD1
+| 模块 | 引脚 | 功能描述 |
+| :--- | :--- | :--- |
+| **主控通信 (UART1)** | `PA9` (Tx), `PA10` (Rx) | 连接至ESP32-S3的串口1，用于主从通信 |
+| **Zigbee通信 (UART2)** | `PA2` (Tx), `PA3` (Rx) | 连接CC2530协调器模块 |
+| **以太网** | 板载RJ45接口 | 用于UDP数据上报 |
+| **调试接口** | `PA13` (SWDIO), `PA14` (SWCLK) | 用于固件烧录与调试 |
+| **温湿度传感器 (DHT11)** | `PC1` | 单总线协议数据引脚 |
+| **光敏电阻** | `PA1` (ADC1_IN1) | 模拟输入，检测环境亮度 |
+| **状态指示灯 (LED)** | `PC3` (LED1), `PC4` (LED2) | 推挽输出，低电平点亮 |
+| **功能按键 (KEY)** | `PA0` (EXTI0) | 上拉输入，下降沿触发中断 |
+| **蜂鸣器 (Buzzer)** | `PA5` | 推挽输出，高电平鸣叫 |
+| **门锁舵机 (Servo)** | `PC5` (TIM3_CH2) | PWM输出，控制舵机角度 |
 
---- Zigbee Communication ---
-- USART2_TX (to Zigbee RX): PA2
-- USART2_RX (from Zigbee TX): PA3
+## CC2530 终端节点引脚分配
 
---- User LEDs ---
-- LED1 (Auto Light & Manual Control): PB0
-- LED2 (UART Command Control): PB1
+| 模块 | 引脚 | 功能描述 |
+| :--- | :--- | :--- |
+| **人体红外传感器 (SR602)** | `P0.0` | GPIO输入，高电平表示检测到人体 |
+| **烟雾传感器 (MQ2)** | `P0.1` | 模拟输入，检测烟雾浓度 |
 
---- User KEY ---
-- KEY1 (Manual LED1 Toggle & Alarm Clearing): PA0 -> EXTI0
+---
 
---- Actuators ---
-- Buzzer: PB2
-- Servo (Door Lock): PB4 -> TIM3_CH1
+## ESP32-S3 硬件引脚分配
 
---- Sensors ---
-- DHT11 (Temperature & Humidity): PA5
-- Photoresistor (Light Sensor): PA1 -> ADC1_IN1
+| 模块 | 引脚 | 功能描述 |
+| :--- | :--- | :--- |
+| **主从通信 (UART1)** | `GPIO16` (Tx), `GPIO15` (Rx) | 连接至CH32V307的串口1，用于主从通信 |
+| **I2S麦克风 (INMP441)** | `GPIO36` (BCK), `GPIO37` (WS), `GPIO35` (DIN) | I2S总线，用于采集语音信号 |
+| **摄像头 (OV2640)** | 详细引脚见下方列表 | SCCB接口及DVP数据总线 |
+| **调试用LCD (ST7789)** | 详细引脚见下方列表 | SPI2总线，用于调试时显示图像或日志 |
 
---- Debug & Control ---
-- USART1_TX: PA9
-- USART1_RX: PA10
-=========================================================
+### 详细引脚列表
 
-- **注意**: 由于红外和烟雾传感器已移至独立的Zigbee节点，故从CH32V307的引脚图中移除。
+- **ST7789 SPI LCD 模组 (320x240)**
+  - *注意：LCD屏幕仅在调试时使用，不需要调试时可以拔出以节省IO口。*
+  - **接线 (SPI2):**
+    - `GPIO41`: MOSI
+    - `GPIO40`: SCLK
+    - `GPIO42`: CS
+    - `GPIO47`: DC
+    - `GPIO38`: RST
+    - `GPIO3`: BLK (背光)
+
+- **摄像头 (OV2640)**
+  - **接线:**
+    - `GPIO17`: RESET (复位)
+    - `GPIO14`: SIOD (SCCB 数据)
+    - `GPIO13`: SIOC (SCCB 时钟)
+    - `GPIO1, 2, 4, 5, 6, 7, 8, 9`: D0-D7 (数据总线)
+    - `GPIO11`: VSYNC (垂直同步)
+    - `GPIO12`: HREF (水平参考)
+    - `GPIO10`: PCLK (像素时钟)
