@@ -88,7 +88,7 @@
     3.  当传感器被触发时，通过Zigbee无线网络向协调器（连接在CH32V307上）发送报警指令。
 - **如何编译和下载**:
     1.  确保已安装 IAR Embedded Workbench for 8051 和 TI Z-Stack-Home-1.2.2a。
-    2.  使用 IAR 打开 `CC2530_Firmware/` 目录下的 `.eww` 工作区文件。
+    2.  使用 IAR 打开 `CC2530_Firmware/` 目录下的 `.eww` 工作区文件。（注意环境的修改！）
     3.  编译工程，并使用 CC-Debugger 将生成的固件下载到 CC2530 模块。
 
 ### 3. ESP32-S3 主机固件
