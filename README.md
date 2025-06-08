@@ -52,7 +52,7 @@
 ### 技术栈清单
 | 类别 | 技术点 |
 | :--- | :--- |
-| **硬件平台** | `ESP32-S3`, `CH32V307 (RISC-V)`, `CC2530`, `OV2640`, `INMP441`, `DHT11` |
+| **硬件平台** | `ESP32-S3`, `CH32V307 (RISC-V)`, `CC2530`, `OV2640`, `INMP441`, `DHT11`,`各类传感器` |
 | **核心框架** | `ESP-IDF`, `ESP-WHO`, `ESP-SR`, `FreeRTOS`, `Zigbee (Z-Stack)` |
 | **通信接口** | `Ethernet` (UDP), `UART`, `I2C`, `SPI`, `单总线`, `Zigbee` |
 | **开发工具** | `MounRiver Studio`, `VS Code` with `ESP-IDF Plugin`, `IAR Embedded Workbench for 8051` |
