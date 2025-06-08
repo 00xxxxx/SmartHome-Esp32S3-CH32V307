@@ -76,7 +76,7 @@
 
 这部分是项目的智能处理核心，负责运行AI算法和系统主逻辑。
 
-- 代码位置: 所有源码及ESP-IDF工程文件均位于 `ESP32_Firmware/` 目录下。 (请根据您的实际目录结构调整)
+- 代码位置: 所有源码及ESP-IDF工程文件均位于源目录下（删除`CH32_Firmware/` 目录）。
 - 开发环境: `ESP-IDF` (推荐 V5.0及以上)
 - 核心任务:
     - Camera Task: 使用 `esp_camera` 组件驱动 `OV2640` 进行图像采集。
@@ -85,7 +85,7 @@
     - Control Task: 根据识别结果，或接收到的其他指令，组装命令并通过串口发送给 `CH32V307`。
 - 如何编译和下载:
     1.  参考[官方文档](https://docs.espressif.com/projects/esp-idf/en/latest/esp32s3/get-started/index.html)安装 ESP-IDF 并配置好开发环境。
-    2.  在终端中进入 ESP32 的固件目录 (例如 `ESP32_Firmware/`)。
+    2.  在终端中进入 ESP32 的固件目录。
     3.  运行 `idf.py build` 进行编译。
     4.  运行 `idf.py -p (您的串口号) flash monitor` 来下载固件并查看日志。
 
